@@ -19,9 +19,9 @@ import {
     type Memory,
     type Relationship,
     type UUID,
-    type IAgentRuntime,
     type Adapter,
     type Plugin,
+    type IAgentRuntime,
 } from "@elizaos/core";
 import fs from "fs";
 import path from "path";
@@ -38,8 +38,7 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 
 export class PostgresDatabaseAdapter
     extends DatabaseAdapter<Pool>
-    implements IDatabaseCacheAdapter
-{
+    implements IDatabaseCacheAdapter {
     private pool: Pool;
     private readonly maxRetries: number = 3;
     private readonly baseDelay: number = 1000; // 1 second
@@ -662,13 +661,13 @@ export class PostgresDatabaseAdapter
                 timeRange:
                     params.start || params.end
                         ? {
-                              start: params.start
-                                  ? new Date(params.start).toISOString()
-                                  : undefined,
-                              end: params.end
-                                  ? new Date(params.end).toISOString()
-                                  : undefined,
-                          }
+                            start: params.start
+                                ? new Date(params.start).toISOString()
+                                : undefined,
+                            end: params.end
+                                ? new Date(params.end).toISOString()
+                                : undefined,
+                        }
                         : undefined,
                 limit: params.count,
             });
@@ -1814,7 +1813,8 @@ export class PostgresDatabaseAdapter
     }
 }
 
-export const postgresAdapter: Adapter = {
+// Create and export the default adapter instance
+export const postgresAdapter = {
     init: (runtime: IAgentRuntime) => {
         const POSTGRES_URL = runtime.getSetting("POSTGRES_URL");
         if (POSTGRES_URL) {
@@ -1823,7 +1823,7 @@ export const postgresAdapter: Adapter = {
                 connectionString: POSTGRES_URL,
                 parseInputs: true,
             });
-    
+
             // Test the connection
             db.init()
                 .then(() => {
@@ -1834,7 +1834,7 @@ export const postgresAdapter: Adapter = {
                 .catch((error) => {
                     elizaLogger.error("Failed to connect to PostgreSQL:", error);
                 });
-    
+
             return db;
         } else {
             throw new Error("POSTGRES_URL is not set");

@@ -1406,14 +1406,15 @@ var postgresAdapter = {
   }
 };
 
-// src/index.ts
+// src/plugin.ts
 var postgresPlugin = {
   name: "postgres",
   description: "PostgreSQL database adapter plugin",
   adapters: [postgresAdapter]
 };
-var index_default = postgresPlugin;
 export {
-  index_default as default
+  PostgresDatabaseAdapter,
+  postgresPlugin as default,
+  postgresAdapter
 };
 //# sourceMappingURL=index.js.map
