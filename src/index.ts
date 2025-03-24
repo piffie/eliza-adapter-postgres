@@ -1,4 +1,4 @@
-import { postgresAdapter } from "./client";
+export { postgresAdapter,PostgresDatabaseAdapter } from "./client";
 
 const postgresPlugin = {
     name: "postgres",
