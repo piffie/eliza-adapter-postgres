@@ -36,6 +36,11 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
+interface PostgresConnectionConfig extends pg.PoolConfig {
+    parseInputs?: boolean;
+    connectionString?: string;
+}
+
 export class PostgresDatabaseAdapter
     extends DatabaseAdapter<Pool>
     implements IDatabaseCacheAdapter {
@@ -46,7 +51,7 @@ export class PostgresDatabaseAdapter
     private readonly jitterMax: number = 1000; // 1 second
     private readonly connectionTimeout: number = 5000; // 5 seconds
 
-    constructor(connectionConfig: any) {
+    constructor(connectionConfig: PostgresConnectionConfig) {
         super({
             //circuitbreaker stuff
             failureThreshold: 5,

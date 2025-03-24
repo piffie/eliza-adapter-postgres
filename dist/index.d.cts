@@ -4,6 +4,10 @@ import { IAgentRuntime, DatabaseAdapter, IDatabaseCacheAdapter, UUID, Participan
 
 type Pool = pg.Pool;
 
+interface PostgresConnectionConfig extends pg.PoolConfig {
+    parseInputs?: boolean;
+    connectionString?: string;
+}
 declare class PostgresDatabaseAdapter extends DatabaseAdapter<Pool> implements IDatabaseCacheAdapter {
     private pool;
     private readonly maxRetries;
@@ -11,7 +15,7 @@ declare class PostgresDatabaseAdapter extends DatabaseAdapter<Pool> implements I
     private readonly maxDelay;
     private readonly jitterMax;
     private readonly connectionTimeout;
-    constructor(connectionConfig: any);
+    constructor(connectionConfig: PostgresConnectionConfig);
     private setupPoolErrorHandling;
     private withDatabase;
     private withRetry;

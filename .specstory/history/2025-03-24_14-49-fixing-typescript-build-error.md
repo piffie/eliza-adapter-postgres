@@ -430,6 +430,230 @@ Node.js v23.7.0
 
 _**Assistant**_
 
+I see the issue. This appears to be an ESM (ECMAScript Modules) compatibility problem with the `pg` package. Let me help you fix this by updating the package configuration.
+
+First, let's modify the package.json to properly handle ESM imports:
+
+---
+
+_****_
+
+```diff
+    "types": "dist/index.d.ts",
+    "exports": {
+-     "./package.json": "./package.json",
+      ".": {
+-       "import": {
+-         "@elizaos/source": "./src/index.ts",
+-         "types": "./dist/index.d.ts",
+-         "default": "./dist/index.js"
+-       }
++       "import": "./dist/index.js",
++       "require": "./dist/index.js",
++       "types": "./dist/index.d.ts"
+      }
+    },
+    },
+    "scripts": {
+-     "build": "tsup --format esm --dts",
+-     "dev": "tsup --format esm --dts --watch"
++     "build": "tsup --format esm,cjs --dts",
++     "dev": "tsup --format esm,cjs --dts --watch"
+    }
+  }
+```
+
+---
+
+_****_
+
+Now let's create a tsup.config.ts file to configure the build process:
+
+---
+
+_****_
+
+```diff
+      sourcemap: true,
+      clean: true,
+-     format: ["esm"], // Ensure you're targeting CommonJS
++     dts: true,
++     format: ["esm", "cjs"],
++     target: "node16",
+      external: [
+          "dotenv", // Externalize dotenv to prevent bundling
+```
+
+---
+
+_****_
+
+Now let's rebuild the package with these new configurations:
+
+---
+
+_****_
+
+```bash
+pnpm build
+```
+
+```
+PS C:\dev\git\eliza-adapter-postgres> pnpm build
+
+> @elizaos-plugins/adapter-postgres@0.1.9 build C:\dev\git\eliza-adapter-postgres
+> tsup --format esm,cjs --dts
+
+▲ [WARNING] The condition "types" here will never be used as it comes after both "import" and "require" [
+package.json]
+
+    package.json:12:6:
+      12 │       "types": "./dist/index.d.ts"
+         ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:10:6:
+      10 │       "import": "./dist/index.js",
+         ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+    package.json:11:6:
+      11 │       "require": "./dist/index.js",
+         ╵       ~~~~~~~~~
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.3.5
+CLI Using tsup config: C:\dev\git\eliza-adapter-postgres\tsup.config.ts
+CLI Target: node16
+CLI Cleaning output folder
+ESM Build start
+CJS Build start
+
+[15:08:24]  WARN  ▲ [WARNING] The condition "types" here will never be used as it comes after both "impor
+t" and "require" [package.json]
+
+    package.json:12:6:
+      12 │       "types": "./dist/index.d.ts"
+         ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:10:6:
+      10 │       "import": "./dist/index.js",
+         ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:11:6:
+      11 │       "require": "./dist/index.js",
+         ╵       ~~~~~~~~~
+
+
+
+
+[15:08:24]  WARN  ▲ [WARNING] The condition "types" here will never be used as it comes after both "impor
+t" and "require" [package.json]
+
+    package.json:12:6:
+      12 │       "types": "./dist/index.d.ts"
+         ╵       ~~~~~~~
+
+  The "import" condition comes earlier and will be used for all "import" statements:
+
+    package.json:10:6:
+      10 │       "import": "./dist/index.js",
+         ╵       ~~~~~~~~
+
+  The "require" condition comes earlier and will be used for all "require" calls:
+
+    package.json:11:6:
+      11 │       "require": "./dist/index.js",
+         ╵       ~~~~~~~~~
+
+
+
+
+[15:08:24]  WARN  ▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be emp
+ty [empty-import-meta]
+
+    src/client.ts:36:33:
+      36 │ ..._filename = fileURLToPath(import.meta.url); // get the resolved...
+         ╵                              ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+
+
+ESM dist\index.js     46.33 KB
+ESM dist\index.js.map 97.57 KB
+ESM ⚡️ Build success in 80ms
+CJS dist\index.cjs     48.98 KB
+CJS dist\index.cjs.map 97.78 KB
+CJS ⚡️ Build success in 82ms
+DTS Build start
+DTS ⚡️ Build success in 4313ms
+DTS dist\index.d.ts  5.75 KB
+DTS dist\index.d.cts 5.75 KB
+PS C:\dev\git\eliza-adapter-postgres>
+```
+
+---
+
+_****_
+
+Let me also update the package.json one more time to fix the exports configuration:
+
+---
+
+_****_
+
+Cancelled
+
+---
+
+_****_
+
+Let's rebuild one more time with these changes:
+
+---
+
+_****_
+
+Cancelled
+
+---
+
+_**User**_
+
+another error: Starting up...
+[2025-03-24 07:12:15] ERROR: Error starting agent for character Albert:
+TypeError: PostgresDatabaseAdapter is not a constructor
+    at initializeDatabase (file:///C:/dev/git/mc2.agents/src/database/index.ts:7:20)
+    at startAgent (file:///C:/dev/git/mc2.agents/src/index.ts:53:20)
+    at startAgents (file:///C:/dev/git/mc2.agents/src/index.ts:96:19)
+[2025-03-24 07:12:15] ERROR: Error starting agents:
+[2025-03-24 07:12:15] ERROR: Unhandled error in startAgents:
+ ELIFECYCLE  Command failed with exit code 1.
+PS C:\dev\git\mc2.agents> 
+
+---
+
+_**Assistant**_
+
+I see the issue. The error "PostgresDatabaseAdapter is not a constructor" suggests that we're not properly exporting the class. Let me check how we're exporting the PostgresDatabaseAdapter class.
+
+---
+
+_****_
+
+Read file: undefined
+
+---
+
+_****_
+
 
 
 ---

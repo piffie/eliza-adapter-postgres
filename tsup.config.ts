@@ -8,6 +8,8 @@ export default defineConfig({
     dts: true,
     format: ["esm", "cjs"],
     target: "node16",
+    treeshake: false,
+    splitting: false,
     external: [
         "dotenv", // Externalize dotenv to prevent bundling
         "fs", // Externalize fs to use Node.js built-in module
@@ -19,6 +21,6 @@ export default defineConfig({
         "agentkeepalive",
         "uuid",
         "@elizaos/core",
-        // Add other modules you want to externalize
+        "pg"
     ],
 });
