@@ -29,9 +29,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
-  PostgresDatabaseAdapter: () => PostgresDatabaseAdapter,
-  default: () => postgresPlugin,
-  postgresAdapter: () => postgresAdapter
+  PostgresDatabaseAdapter: () => PostgresDatabaseAdapter
 });
 module.exports = __toCommonJS(index_exports);
 
@@ -1416,38 +1414,8 @@ var PostgresDatabaseAdapter = class extends import_core.DatabaseAdapter {
     );
   }
 };
-var postgresAdapter = {
-  init: (runtime) => {
-    const POSTGRES_URL = runtime.getSetting("POSTGRES_URL");
-    if (POSTGRES_URL) {
-      import_core.elizaLogger.info("Initializing PostgreSQL connection...");
-      const db = new PostgresDatabaseAdapter({
-        connectionString: POSTGRES_URL,
-        parseInputs: true
-      });
-      db.init().then(() => {
-        import_core.elizaLogger.success(
-          "Successfully connected to PostgreSQL database"
-        );
-      }).catch((error) => {
-        import_core.elizaLogger.error("Failed to connect to PostgreSQL:", error);
-      });
-      return db;
-    } else {
-      throw new Error("POSTGRES_URL is not set");
-    }
-  }
-};
-
-// src/plugin.ts
-var postgresPlugin = {
-  name: "postgres",
-  description: "PostgreSQL database adapter plugin",
-  adapters: [postgresAdapter]
-};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  PostgresDatabaseAdapter,
-  postgresAdapter
+  PostgresDatabaseAdapter
 });
 //# sourceMappingURL=index.cjs.map

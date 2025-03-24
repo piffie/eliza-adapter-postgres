@@ -1,6 +1,5 @@
 import pg, { QueryResultRow, QueryConfig, QueryConfigValues, QueryResult } from 'pg';
-import * as _elizaos_core from '@elizaos/core';
-import { IAgentRuntime, DatabaseAdapter, IDatabaseCacheAdapter, UUID, Participant, Memory, Account, Actor, Goal, Relationship, GoalStatus, RAGKnowledgeItem } from '@elizaos/core';
+import { DatabaseAdapter, IDatabaseCacheAdapter, UUID, Participant, Memory, Account, Actor, Goal, Relationship, GoalStatus, RAGKnowledgeItem } from '@elizaos/core';
 
 type Pool = pg.Pool;
 
@@ -158,16 +157,5 @@ declare class PostgresDatabaseAdapter extends DatabaseAdapter<Pool> implements I
     clearKnowledge(agentId: UUID, shared?: boolean): Promise<void>;
     private createKnowledgeChunk;
 }
-declare const postgresAdapter: {
-    init: (runtime: IAgentRuntime) => PostgresDatabaseAdapter;
-};
 
-declare const postgresPlugin: {
-    name: string;
-    description: string;
-    adapters: {
-        init: (runtime: _elizaos_core.IAgentRuntime) => PostgresDatabaseAdapter;
-    }[];
-};
-
-export { PostgresDatabaseAdapter, postgresPlugin as default, postgresAdapter };
+export { PostgresDatabaseAdapter };

@@ -1,2 +1,1 @@
-export { postgresAdapter, PostgresDatabaseAdapter } from "./client";
-export { postgresPlugin as default } from "./plugin";
+export { PostgresDatabaseAdapter } from "./client";
